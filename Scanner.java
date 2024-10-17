@@ -54,64 +54,45 @@ class Scanner {
   private void scanToken() {
     char c = advance();
     switch (c) {
-        case '(': addToken(TokenType.LEFT_PAREN); break;
-        case ')': addToken(TokenType.RIGHT_PAREN); break;
-        case '{': addToken(TokenType.LEFT_BRACE); break;
-        case '}': addToken(TokenType.RIGHT_BRACE); break;
-        case ',': addToken(TokenType.COMMA); break;
-        case '.': addToken(TokenType.DOT); break;
-        case '-': addToken(TokenType.MINUS); break;
-        case '+': addToken(TokenType.PLUS); break;
-        case ';': addToken(TokenType.SEMICOLON); break;
-        case '*': addToken(TokenType.STAR); break;
-
-        //check length two lexemes 
-        case '!':
-          addToken(match('=') ? TokenType.BANG_EQUAL : TokenType.BANG);
-          break;
-        case '=':
-          addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
-          break;
-        case '<':
-          addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS);
-          break;
-        case '>':
-          addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
-          break;
-          
-        //we need to check if '/' means division or the first character of a comment  
-        case '/':
-          if (match('/')) {
-            // A comment goes until the end of the line.
-            while (peek() != '\n' && !isAtEnd()) advance();
-          } else {
-            addToken(TokenType.SLASH);
+        case '(' -> addToken(TokenType.LEFT_PAREN);
+        case ')' -> addToken(TokenType.RIGHT_PAREN);
+        case '{' -> addToken(TokenType.LEFT_BRACE);
+        case '}' -> addToken(TokenType.RIGHT_BRACE);
+        case ',' -> addToken(TokenType.COMMA);
+        case '.' -> addToken(TokenType.DOT);
+        case '-' -> addToken(TokenType.MINUS);
+        case '+' -> addToken(TokenType.PLUS);
+        case ';' -> addToken(TokenType.SEMICOLON);
+        case '*' -> addToken(TokenType.STAR);
+        case '!' -> addToken(match('=') ? TokenType.BANG_EQUAL : TokenType.BANG);
+        case '=' -> addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
+        case '<' -> addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS);
+        case '>' -> addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
+        case '/' -> {
+            if (match('/')) {
+                // A comment goes until the end of the line.
+                while (peek() != '\n' && !isAtEnd()) advance();
+            } else {
+                addToken(TokenType.SLASH);
+            }
           }
-          break;
         
-        case ' ':
-        case '\r':
-        case '\t':
-          // Ignore whitespace.
-          break;
+        case ' ', '\r', '\t' -> {
+          }
+        case '\n' -> line++;
+        case '"' -> string();
 
-        case '\n':
-          line++;
-          break;
-        
-        //string literal
-        case '"': string(); break;
-
-        default:
-          if (isDigit(c)) {
-            number();
-          } else if (isAlpha(c)) {
-            identifier();
-          } else {
-            Lox.error(line, "Unexpected character.");
+        default -> {
+            if (isDigit(c)) {
+                number();
+            } else if (isAlpha(c)) {
+                identifier();
+            } else {
+                Lox.error(line, "Unexpected character.");
+            }
           }
       }
-  }
+        }
 
   private boolean match(char expected) {
     if (isAtEnd()) return false;
@@ -152,7 +133,7 @@ class Scanner {
     }
 
     addToken(TokenType.NUMBER,
-        Double.parseDouble(source.substring(start, current)));
+        Double.valueOf(source.substring(start, current)));
   }
 
   private void identifier() {
