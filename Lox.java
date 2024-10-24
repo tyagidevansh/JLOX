@@ -40,12 +40,12 @@ public class Lox {
       String line = reader.readLine();
       if (line == null) break;
       run(line);
-      hadError = false;
+      hadError = false; //dont want error in one statement to prevent user from executing another
     }
   }
 
   private static void run(String source) {
-    Scanner scanner = new Scanner(source);
+    Scanner scanner = new Scanner(source); //1. produce tokens
     List<Token> tokens = scanner.scanTokens();
 
     // // For now, just print the tokens.
@@ -53,14 +53,14 @@ public class Lox {
     //   System.out.println(token);
     // }
 
-    Parser parser = new Parser(tokens);
-    Expr expression = parser.parse();
+    Parser parser = new Parser(tokens); 
+    List<Stmt> statements = parser.parse();  //2. parse into statements
 
     // Stop if there was a syntax error.
     if (hadError) return;
 
     //System.out.println(new AstPrinter().print(expression));
-    interpreter.interpret(expression);
+    interpreter.interpret(statements); //3. evaluate statements
   }
 
   static void error(int line, String message) {
