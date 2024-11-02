@@ -1,3 +1,6 @@
+//goes through the entire program once, checking all of the syntax - if the variables are declared correctly etc, but does not execute it.
+// main purpose is to make variable scoping watertight
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +73,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
   @Override
   public Void visitVarStmt(Stmt.Var stmt) {
-    declare(stmt.name);
+    declare(stmt.name);  //decide what scope to put a variable in, if no scope then its global
     if (stmt.initializer != null) {
       resolve(stmt.initializer);
     }

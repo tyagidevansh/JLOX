@@ -3,7 +3,7 @@ print "Printing the first 20 fibonacci numbers: ";
 
 fun fib(n) {
   if (n <= 1) return n;
-  return fib(n - 2) + fib(n - 1);
+  return fib(n - 2) + fib(n - 1); //comment
 }
 
 for (var i = 0; i < 20; i = i + 1) {
